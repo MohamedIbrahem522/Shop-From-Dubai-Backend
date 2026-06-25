@@ -85,14 +85,10 @@ export const createProduct = asyncHandler(async (req, res) => {
 
 
 
-  const slug =
-  slugify(name || "",{
-
-    lower:true,
-
-    strict:true,
-
-  });
+  let slug =
+  slugify(name || "",{ lower:true, strict:true });
+  const existingSlug = await Product.findOne({ slug });
+  if (existingSlug) slug = slug + "-" + Date.now();
 
 
 
