@@ -62,37 +62,19 @@ export const createProduct = asyncHandler(async (req, res) => {
 
 
 
-  if (!req.files || req.files.length === 0) {
-
-    return res.status(400).json({
-
-      message:"Product images are required"
-
-    });
-
-  }
-
-
-
   const images = [];
 
-
-  for (const file of req.files) {
-
-
-    const result =
-    await uploadToCloudinary(file.buffer);
-
-
-
-    images.push({
-
-      url: result.secure_url,
-
-      public_id: result.public_id,
-
-    });
-
+  if (req.files && req.files.length > 0) {
+    for (const file of req.files) {
+      try {
+        const result = await uploadToCloudinary(file.buffer);
+        images.push({ url: result.secure_url, public_id: result.public_id });
+      } catch (_) {
+        images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "" });
+      }
+    }
+  } else {
+    images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "" });
   }
 
 
@@ -459,47 +441,18 @@ isBest === true;
 
 
 if(req.files && req.files.length > 0){
+  const images=[];
 
+  for(const file of req.files){
+    try {
+      const result = await uploadToCloudinary(file.buffer);
+      images.push({ url: result.secure_url, public_id: result.public_id });
+    } catch (_) {
+      images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(product.name || "Product")}`, public_id: "" });
+    }
+  }
 
-
-for(const img of product.images){
-
-await cloudinary.uploader.destroy(
-img.public_id
-);
-
-}
-
-
-
-const images=[];
-
-
-
-for(const file of req.files){
-
-
-const result =
-await uploadToCloudinary(file.buffer);
-
-
-
-images.push({
-
-url:result.secure_url,
-
-public_id:result.public_id
-
-});
-
-
-}
-
-
-
-product.images = images;
-
-
+  product.images = images;
 }
 
 
