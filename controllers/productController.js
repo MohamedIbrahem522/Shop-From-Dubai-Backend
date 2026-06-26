@@ -447,7 +447,9 @@ if(req.files && req.files.length > 0){
       return { url: `https://placehold.co/600x400?text=${encodeURIComponent(product.name || "Product")}`, public_id: "placeholder" };
     }
   });
-  product.images = await Promise.all(uploads);
+  const newImages = await Promise.all(uploads);
+  const existing = (product.images || []).filter(i => i.public_id !== "placeholder");
+  product.images = [...existing, ...newImages];
 }
 
 
