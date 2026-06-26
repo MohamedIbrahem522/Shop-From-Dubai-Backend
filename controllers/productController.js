@@ -130,6 +130,8 @@ export const createProduct = asyncHandler(async (req, res) => {
     isBest === "true" ||
     isBest === true,
 
+    active: req.body?.active === undefined ? true : req.body.active === "true" || req.body.active === true,
+
   });
 
 
@@ -434,6 +436,10 @@ product.isBest =
 isBest === "true" ||
 isBest === true;
 
+}
+
+if (req.body?.active !== undefined) {
+  product.active = req.body.active === "true" || req.body.active === true;
 }
 
 
