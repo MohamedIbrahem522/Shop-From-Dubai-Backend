@@ -12,7 +12,7 @@ const uploadToCloudinary = (buffer) => {
   return new Promise((resolve, reject) => {
 
     const stream = cloudinary.uploader.upload_stream(
-      { folder: "products" },
+      { folder: "products", format: "webp" },
 
       (error, result) => {
         if (error) return reject(error);

@@ -7,7 +7,7 @@ import { asyncHandler } from "../middleware/asyncHandler.js";
 const uploadToCloudinary = (buffer) => {
   return new Promise((resolve, reject) => {
     const stream = cloudinary.uploader.upload_stream(
-      { folder: "reviews" },
+      { folder: "reviews", format: "webp" },
       (err, result) => {
         if (err) return reject(err);
         resolve(result);
