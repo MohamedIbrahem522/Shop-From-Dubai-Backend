@@ -62,9 +62,11 @@ export const createProduct = asyncHandler(async (req, res) => {
 
 
 
-  const images = [];
-
-  if (req.files && req.files.length > 0) {
+  const imageUrls = req.body?.imageUrls;
+  let images = [];
+  if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+    images = imageUrls.map(url => ({ url, public_id: "direct" }));
+  } else if (req.files && req.files.length > 0) {
     const uploads = req.files.map(async (file) => {
       try {
         const result = await uploadToCloudinary(file.buffer);
