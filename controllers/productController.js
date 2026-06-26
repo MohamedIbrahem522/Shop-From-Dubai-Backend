@@ -67,7 +67,10 @@ export const createProduct = asyncHandler(async (req, res) => {
   if (req.files && req.files.length > 0) {
     for (const file of req.files) {
       try {
-        const result = await uploadToCloudinary(file.buffer);
+        const result = await Promise.race([
+          uploadToCloudinary(file.buffer),
+          new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000)),
+        ]);
         images.push({ url: result.secure_url, public_id: result.public_id });
       } catch (_) {
         images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "placeholder" });
@@ -442,7 +445,10 @@ if(req.files && req.files.length > 0){
 
   for (const file of req.files) {
     try {
-      const result = await uploadToCloudinary(file.buffer);
+      const result = await Promise.race([
+        uploadToCloudinary(file.buffer),
+        new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000)),
+      ]);
       images.push({ url: result.secure_url, public_id: result.public_id });
     } catch (_) {
       images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(product.name || "Product")}`, public_id: "placeholder" });

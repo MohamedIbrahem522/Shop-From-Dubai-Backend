@@ -31,7 +31,10 @@ export const uploadReview = asyncHandler(async (req, res) => {
 
   let result;
   try {
-    result = await uploadToCloudinary(req.file.buffer);
+    result = await Promise.race([
+      uploadToCloudinary(req.file.buffer),
+      new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000)),
+    ]);
   } catch (_) {
     return res.status(201).json({
       message: "Review uploaded successfully",
