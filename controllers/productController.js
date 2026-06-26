@@ -452,6 +452,13 @@ if(req.files && req.files.length > 0){
   product.images = [...existing, ...newImages];
 }
 
+const imageUrls = req.body?.imageUrls;
+if (Array.isArray(imageUrls) && imageUrls.length > 0) {
+  const existing = (product.images || []).filter(i => i.public_id !== "placeholder");
+  const newImages = imageUrls.map(url => ({ url, public_id: "direct" }));
+  product.images = [...existing, ...newImages];
+}
+
 
 
 
