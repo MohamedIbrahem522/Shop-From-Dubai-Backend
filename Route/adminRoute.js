@@ -4,6 +4,7 @@ import {
   changePassword,
   updateEmail,
   logout,
+  cleanupAdmins,
 } from "../controllers/adminController.js";
 
 import {
@@ -28,6 +29,7 @@ router.put("/account/email", protect, updateEmail);
 router.put("/account/password", protect, changePassword);
 
 router.post("/auth/logout", protect, logout);
+router.post("/cleanup", protect, isSuperAdmin, cleanupAdmins);
 
 
 // ======================

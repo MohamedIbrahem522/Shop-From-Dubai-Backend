@@ -240,6 +240,20 @@ export const updateEmail = asyncHandler(async (req, res) => {
 
 
 // =========================
+// CLEANUP — delete all admins except current
+// =========================
+export const cleanupAdmins = asyncHandler(async (req, res) => {
+  const currentId = req.user.id;
+  const del = await Admin.deleteMany({ _id: { $ne: currentId } });
+  // Create a default admin if none left
+  const count = await Admin.countDocuments();
+  if (count === 0) {
+    await Admin.create({ name: "Admin", email: "admin@shopfromdubai.com", password: "admin123", role: "super_admin" });
+  }
+  res.json({ message: `Deleted ${del.deletedCount} extra admin(s)`, remaining: await Admin.countDocuments() });
+});
+
+// =========================
 // LOGOUT
 // =========================
 
