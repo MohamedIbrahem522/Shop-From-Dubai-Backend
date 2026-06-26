@@ -12,7 +12,19 @@ import productRoute from "./Route/productRoute.js";
 import categoryRoute from "./Route/categoryRoute.js";
 import reviewRoute from "./Route/reviewRoute.js";
 
+import cloudinary from "./config/cloudinary.js";
+
 const app = express();
+
+// Debug: check Cloudinary env vars (remove later)
+app.get("/debug/cloudinary", async (req, res) => {
+  try {
+    const ping = await cloudinary.api.ping();
+    res.json({ status: "ok", cloud_name: process.env.CLOUDINARY_NAME, ping: ping.status });
+  } catch (e) {
+    res.json({ status: "error", cloud_name: process.env.CLOUDINARY_NAME, error: e.message });
+  }
+});
 
 
 // ======================
