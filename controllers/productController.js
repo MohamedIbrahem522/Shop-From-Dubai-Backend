@@ -65,17 +65,18 @@ export const createProduct = asyncHandler(async (req, res) => {
   const images = [];
 
   if (req.files && req.files.length > 0) {
-    for (const file of req.files) {
+    const uploads = req.files.map(async (file) => {
       try {
         const result = await Promise.race([
           uploadToCloudinary(file.buffer),
           new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000)),
         ]);
-        images.push({ url: result.secure_url, public_id: result.public_id });
+        return { url: result.secure_url, public_id: result.public_id };
       } catch (_) {
-        images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "placeholder" });
+        return { url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "placeholder" };
       }
-    }
+    });
+    images.push(...await Promise.all(uploads));
   } else {
     images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(name || "Product")}`, public_id: "placeholder" });
   }
@@ -441,21 +442,18 @@ isBest === true;
 
 
 if(req.files && req.files.length > 0){
-  const images = [];
-
-  for (const file of req.files) {
+  const uploads = req.files.map(async (file) => {
     try {
       const result = await Promise.race([
         uploadToCloudinary(file.buffer),
         new Promise((_, rej) => setTimeout(() => rej(new Error("timeout")), 8000)),
       ]);
-      images.push({ url: result.secure_url, public_id: result.public_id });
+      return { url: result.secure_url, public_id: result.public_id };
     } catch (_) {
-      images.push({ url: `https://placehold.co/600x400?text=${encodeURIComponent(product.name || "Product")}`, public_id: "placeholder" });
+      return { url: `https://placehold.co/600x400?text=${encodeURIComponent(product.name || "Product")}`, public_id: "placeholder" };
     }
-  }
-
-  product.images = images;
+  });
+  product.images = await Promise.all(uploads);
 }
 
 
