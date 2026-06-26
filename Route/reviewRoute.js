@@ -12,19 +12,8 @@ const router = express.Router();
 
 router.get("/", getReviews);
 
-router.post(
-  "/",
-  protect,
-  isSuperAdmin,
-  upload.single("image"),
-  uploadReview
-);
+router.post("/", protect, isSuperAdmin, upload.single("image"), uploadReview);
 
-router.delete(
-  "/:id",
-  protect,
-  isSuperAdmin,
-  deleteReview
-);
+router.delete("/:id", protect, isSuperAdmin, deleteReview);
 
 export default router;

@@ -3,13 +3,11 @@ import Admin from "../models/admin.js";
 import { generateToken } from "../middleware/auth.js";
 import { asyncHandler } from "../middleware/asyncHandler.js";
 
-
 // =========================
 // LOGIN → JWT
 // =========================
 export const login = asyncHandler(async (req, res) => {
   const { email, password } = req.body;
-
 
   if (!email || !password) {
     return res.status(400).json({
@@ -17,12 +15,10 @@ export const login = asyncHandler(async (req, res) => {
     });
   }
 
-
   const admin = await Admin.findOne({
     email: email.toLowerCase(),
     isActive: true,
   }).select("+password");
-
 
   if (!admin) {
     return res.status(401).json({
@@ -30,12 +26,9 @@ export const login = asyncHandler(async (req, res) => {
     });
   }
 
-
   const isMatch = await admin.comparePassword(password);
 
-
   if (!isMatch) {
-
     admin.incLoginAttempts();
 
     await admin.save();
@@ -43,201 +36,116 @@ export const login = asyncHandler(async (req, res) => {
     return res.status(401).json({
       message: "Invalid email or password",
     });
-
   }
-
 
   admin.resetLoginAttempts();
 
   await admin.save();
-
 
   const token = generateToken({
     id: admin._id,
     role: admin.role,
   });
 
-
   res.json({
     message: "Login successful",
     token,
   });
-
 });
-
-
 
 // =========================
 // CHANGE PASSWORD
 // =========================
 
 export const changePassword = asyncHandler(async (req, res) => {
-
-
-  const {
-    currentPassword,
-    newPassword,
-    confirmPassword
-  } = req.body;
-
-
+  const { currentPassword, newPassword, confirmPassword } = req.body;
 
   if (newPassword !== confirmPassword) {
-
     return res.status(400).json({
       message: "Passwords do not match",
     });
-
   }
 
-
-
-  const admin = await Admin
-    .findById(req.user.id)
-    .select("+password");
-
-
+  const admin = await Admin.findById(req.user.id).select("+password");
 
   if (!admin) {
-
     return res.status(404).json({
       message: "Admin not found",
     });
-
   }
-
-
 
   const isMatch = await admin.comparePassword(currentPassword);
 
-
-
   if (!isMatch) {
-
     return res.status(400).json({
       message: "Current password is incorrect",
     });
-
   }
-
-
 
   admin.password = newPassword;
 
   await admin.save();
 
-
-
   res.json({
     message: "Password updated successfully",
   });
-
-
 });
-
-
-
 
 // =========================
 // UPDATE EMAIL
 // =========================
 
 export const updateEmail = asyncHandler(async (req, res) => {
-
-
-  const {
-    currentPassword,
-    newEmail,
-    confirmEmail
-  } = req.body;
-
-
+  const { currentPassword, newEmail, confirmEmail } = req.body;
 
   if (!currentPassword || !newEmail || !confirmEmail) {
-
     return res.status(400).json({
       message: "All fields are required",
     });
-
   }
 
-
-
   if (newEmail !== confirmEmail) {
-
     return res.status(400).json({
       message: "Emails do not match",
     });
-
   }
 
-
-
-  const admin = await Admin
-    .findById(req.user.id)
-    .select("+password");
-
-
+  const admin = await Admin.findById(req.user.id).select("+password");
 
   if (!admin) {
-
     return res.status(404).json({
       message: "Admin not found",
     });
-
   }
-
-
 
   const isMatch = await admin.comparePassword(currentPassword);
 
-
-
   if (!isMatch) {
-
     return res.status(400).json({
       message: "Incorrect password",
     });
-
   }
-
-
 
   const existing = await Admin.findOne({
     email: newEmail.toLowerCase(),
   });
 
-
-
   if (existing) {
-
     return res.status(400).json({
       message: "Email already in use",
     });
-
   }
-
-
 
   admin.email = newEmail.toLowerCase();
 
-
   await admin.save();
 
-
-
   res.json({
-
     message: "Email updated successfully",
 
     email: admin.email,
-
   });
-
-
 });
-
-
 
 // =========================
 // CLEANUP — delete all admins except current
@@ -248,9 +156,17 @@ export const cleanupAdmins = asyncHandler(async (req, res) => {
   // Create a default admin if none left
   const count = await Admin.countDocuments();
   if (count === 0) {
-    await Admin.create({ name: "Admin", email: "admin@shopfromdubai.com", password: "admin123", role: "super_admin" });
+    await Admin.create({
+      name: "Admin",
+      email: "admin@shopfromdubai.com",
+      password: "admin123",
+      role: "super_admin",
+    });
   }
-  res.json({ message: `Deleted ${del.deletedCount} extra admin(s)`, remaining: await Admin.countDocuments() });
+  res.json({
+    message: `Deleted ${del.deletedCount} extra admin(s)`,
+    remaining: await Admin.countDocuments(),
+  });
 });
 
 // =========================
@@ -258,13 +174,7 @@ export const cleanupAdmins = asyncHandler(async (req, res) => {
 // =========================
 
 export const logout = asyncHandler(async (req, res) => {
-
-
   res.json({
-
     message: "Logout successfully",
-
   });
-
-
 });

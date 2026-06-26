@@ -6,7 +6,7 @@ import {
   updateProduct,
   deleteProduct,
   restoreProduct,
-  hardDeleteProduct
+  hardDeleteProduct,
 } from "../controllers/productController.js";
 
 import { protect, isSuperAdmin } from "../middleware/auth.js";
@@ -14,13 +14,11 @@ import { upload } from "../middleware/upload.js";
 
 const router = express.Router();
 
-
 // ======================
 // PUBLIC ROUTES
 // ======================
 router.get("/", getProducts);
 router.get("/:id", getProductById);
-
 
 // ======================
 // ADMIN ROUTES
@@ -30,7 +28,7 @@ router.post(
   protect,
   isSuperAdmin,
   upload.array("images", 5),
-  createProduct
+  createProduct,
 );
 
 router.put(
@@ -38,33 +36,16 @@ router.put(
   protect,
   isSuperAdmin,
   upload.array("images", 5),
-  updateProduct
+  updateProduct,
 );
 
-router.delete(
-  "/:id",
-  protect,
-  isSuperAdmin,
-  deleteProduct
-);
-
+router.delete("/:id", protect, isSuperAdmin, deleteProduct);
 
 // ======================
 // SPECIAL ADMIN ACTIONS
 // ======================
-router.put(
-  "/restore/:id",
-  protect,
-  isSuperAdmin,
-  restoreProduct
-);
+router.put("/restore/:id", protect, isSuperAdmin, restoreProduct);
 
-router.delete(
-  "/hard/:id",
-  protect,
-  isSuperAdmin,
-  hardDeleteProduct
-);
-
+router.delete("/hard/:id", protect, isSuperAdmin, hardDeleteProduct);
 
 export default router;

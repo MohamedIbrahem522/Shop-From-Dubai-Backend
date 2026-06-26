@@ -22,45 +22,34 @@ const categorySchema = new mongoose.Schema(
       index: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
-
 
 // generate slug automatically
 categorySchema.pre("save", function () {
-
   if (this.isModified("name")) {
-
     this.slug = slugify(this.name, {
       lower: true,
       strict: true,
     });
-
   }
-
 });
-
 
 // unique name
 categorySchema.index(
   { name: 1 },
-  { 
+  {
     unique: true,
     collation: {
       locale: "en",
-      strength: 2
-    }
-  }
+      strength: 2,
+    },
+  },
 );
-
 
 // search
 categorySchema.index({
-  name:"text"
+  name: "text",
 });
 
-
-export default mongoose.model(
-  "Category",
-  categorySchema
-);
+export default mongoose.model("Category", categorySchema);

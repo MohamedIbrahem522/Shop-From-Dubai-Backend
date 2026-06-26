@@ -11,7 +11,7 @@ const uploadToCloudinary = (buffer) => {
       (err, result) => {
         if (err) return reject(err);
         resolve(result);
-      }
+      },
     );
     stream.end(buffer);
   });
@@ -37,7 +37,10 @@ export const uploadReview = asyncHandler(async (req, res) => {
       message: "Review uploaded successfully",
       review: await Review.create({
         title: title || "Review Image",
-        image: { url: `https://placehold.co/400x400?text=Review`, public_id: "placeholder" },
+        image: {
+          url: `https://placehold.co/400x400?text=Review`,
+          public_id: "placeholder",
+        },
       }),
     });
   }
@@ -82,7 +85,6 @@ export const deleteReview = asyncHandler(async (req, res) => {
     });
   }
 
-  // delete from cloudinary
   if (review.image?.public_id && review.image.public_id !== "placeholder") {
     await cloudinary.uploader.destroy(review.image.public_id);
   }

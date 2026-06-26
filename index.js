@@ -14,7 +14,6 @@ import reviewRoute from "./Route/reviewRoute.js";
 
 const app = express();
 
-
 // ======================
 // MIDDLEWARES
 // ======================
@@ -22,7 +21,6 @@ const app = express();
 app.use(express.json());
 app.use(helmet());
 app.use(cors());
-
 
 // ======================
 // ROUTES
@@ -34,21 +32,17 @@ app.use("/admin", adminRoute);
 app.use("/products", productRoute);
 app.use("/categories", categoryRoute);
 
-
 // ======================
 // GLOBAL ERROR HANDLER
 // ======================
 
 app.use((err, req, res, next) => {
-
   console.error("🔥 ERROR:", err);
 
   res.status(500).json({
     message: err.message,
   });
-
 });
-
 
 // ======================
 // DATABASE + SERVER START

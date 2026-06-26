@@ -30,7 +30,7 @@ const gallerySchema = new mongoose.Schema(
       default: true,
     },
   },
-  { timestamps: true }
+  { timestamps: true },
 );
 
 gallerySchema.index({ type: 1 });

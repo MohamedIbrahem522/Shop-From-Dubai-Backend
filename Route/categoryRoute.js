@@ -5,7 +5,7 @@ import {
   updateCategory,
   deleteCategory,
   restoreCategory,
-  hardDeleteCategory
+  hardDeleteCategory,
 } from "../controllers/categoryController.js";
 
 import { protect, isSuperAdmin } from "../middleware/auth.js";
