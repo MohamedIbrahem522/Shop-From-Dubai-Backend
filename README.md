@@ -44,7 +44,7 @@ npm install
 npm run dev
 ```
 
-Create a `.env` file with `PORT`, `MONGO_URI`, `ADMIN_EMAIL` and `ADMIN_PASSWORD`, plus the JWT secret and Cloudinary keys used in the code.
+Copy `.env.example` to `.env` and fill in your own values (MongoDB, JWT secret, admin account, Cloudinary).
 
 ## Author
 
