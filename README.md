@@ -2,7 +2,8 @@
 
 REST API behind **Shop From Dubai**, a live Arabic e-commerce site I built for a freelance client.
 
-**Frontend repo:** https://github.com/MohamedIbrahem522/Shop-From-Dubai-Frontend
+**Frontend repo:** https://github.com/MohamedIbrahem522/Shop-From-Dubai-Frontend  
+**Live store:** https://shop-from-dubai-frontend.pages.dev/
 
 ## Features
 
